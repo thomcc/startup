@@ -1,12 +1,9 @@
-# `startup`: Lightweight way to run code before main.
+# `startup`: Run Rust code "before main"
 
-This crate is the moral equivalent to the `ctor` crate, although the API is completely different. The main reason for it's existence is:
+[![Docs](https://docs.rs/startup/badge.svg)](https://docs.rs/startup)
+[![Latest Version](https://img.shields.io/crates/v/startup.svg)](https://crates.io/crates/startup)
 
-- Much faster to compile — no proc macros / syn / quote.
-
-- More obviously safe (avoids things I find dodgy, like `dtor`, ctors that initialize data, uses extern "C" function in function array called from C ...)
-
-- Try to handle untested unix platforms by assuming they support *at least* the `.ctors` section. This is in line with what clang does to compile c++ static constructors.
+Tiny (no-dependency, no proc macro) way to run some code before main (or when your dynamic library is loaded in the case of code loaded via dlopen). This is similar to the GNU C extension `__attribute__((constructor))`, or the behavior of static constructors from C++.
 
 ## Usage
 
@@ -20,9 +17,17 @@ fn main() {
 }
 ```
 
-Outputs:
+Prints:
 
 ```text
 I'm running before main.
 I'm inside main.
 ```
+
+## Comparison with `ctor`
+
+This crate is the moral equivalent to the [`ctor`](https://crates.io/crates/ctor) crate, although the API is completely different. The main reasons for it's existence are:
+
+- Much faster to compile — no proc macros / syn / quote.
+- More obviously safe. No support for `#[ctor]` on statics, no `#[dtor]` equivalent, and avoids a number of issues I filed with `ctor` in the past...
+- Handle untested unix platforms by assuming they support *at least* the `.ctors` section. This is in line with what clang seems to do when compiling C++ static constructors. This means we should expect to have better platform support.

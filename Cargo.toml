@@ -3,6 +3,14 @@ name = "startup"
 version = "0.0.1"
 authors = ["Thom Chiovoloni <chiovolonit@gmail.com>"]
 edition = "2018"
+license = "Apache-2.0 OR MIT OR Zlib"
+description = "Tiny (no dependency, no proc macro) way to run some code before main."
+readme = "README.md"
+documentation = "https://docs.rs/cobb"
+homepage = "https://github.com/thomcc/cobb"
+repository = "https://github.com/thomcc/cobb"
+keywords = ["constructor", "ctor", "init", "main", "static"]
+categories = ["rust-patterns", "no-std"]
 
 [dependencies]
 
