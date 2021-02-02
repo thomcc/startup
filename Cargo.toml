@@ -1,0 +1,11 @@
+[package]
+name = "startup"
+version = "0.0.1"
+authors = ["Thom Chiovoloni <chiovolonit@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+
+
+[workspace]
+exclude = ["testcases/*"]
