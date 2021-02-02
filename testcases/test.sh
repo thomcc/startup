@@ -5,4 +5,4 @@ set -euvx
 
 cargo run --manifest-path=testcases/smokebin/Cargo.toml
 cargo build --manifest-path=testcases/dylib/Cargo.toml
-cargo run --manifest-path testcases/dylib_runner/Cargo.toml -- testcases/target/debug/libdylibtest
+cargo run --manifest-path testcases/dylib_runner/Cargo.toml -- testcases/target/debug

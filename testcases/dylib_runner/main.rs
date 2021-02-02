@@ -1,14 +1,14 @@
 fn main() {
-    let path = std::env::args().skip(1).next().expect("expected arg");
-    let sofile = format!("{}.so", path);
-    let dll = format!("{}.dll", path);
-    let dylib = format!("{}.dylib", path);
-    let file: std::path::PathBuf = if exists(&sofile) {
-        sofile.into()
-    } else if exists(&dll) {
-        dll.into()
-    } else if exists(&dylib) {
-        dylib.into()
+    let path: std::path::PathBuf = std::env::args().skip(1).next().expect("expected arg").into();
+    let sofile = path.join("libdylibtest.so");
+    let dll = path.join("dylibtest.dll");
+    let dylib = path.join("libdylibtest.dylib");
+    let file: std::path::PathBuf = if sofile.exists() {
+        sofile
+    } else if dll.exists() {
+        dll
+    } else if dylib.exists() {
+        dylib
     } else {
         panic!("couldnt find a dylib like {:?}", path);
     };
@@ -26,8 +26,5 @@ fn main() {
         lib.close().unwrap_or_else(|e| {
             panic!("dlclose failed for {:?}: {:?}", file, e);
         });
-    }
-    fn exists(p: impl AsRef<std::path::Path>) -> bool {
-        p.as_ref().exists()
     }
 }

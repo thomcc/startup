@@ -39,7 +39,7 @@ jobs:
       - run: ls testcases/target/debug
         shell: bash
         # if: matrix.os == 'windows-latest'
-      - run: cargo run --manifest-path=testcases/dylib_runner/Cargo.toml -- testcases/target/debug/libdylibtest
+      - run: cargo run --manifest-path=testcases/dylib_runner/Cargo.toml -- testcases/target/debug
         if: matrix.rust != '1.37.0'
 
   checks:
