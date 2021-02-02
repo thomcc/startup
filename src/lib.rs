@@ -71,7 +71,19 @@ macro_rules! on_startup {
         const _: () = {
             // pulled out and scoped to be unable to see the other defs because
             // of the issues around item-level hygene.
-            extern "C" fn __init_function() { $($tokens)* }
+            extern "C" fn __init_function() {
+                // Note: currently pointless, since even when loaded at runtime
+                // via dlopen, panicing before main makes the stdlib abort.
+                // However, if that ever changes in the future, we want to guard
+                // against unwinding over an `extern "C"` boundary, so we force
+                // a double-panic, which will trigger an abort (rather than have
+                // any UB).
+                let _guard = $crate::_private::PanicOnDrop;
+                // Note: ensure we still forget the guard even if `$tokens` has
+                // an explicit `return` in it somewhere.
+                let _ = (|| -> () { $($tokens)* })();
+                $crate::_private::forget(_guard);
+            }
             {
                 #[used]
                 #[cfg_attr(
@@ -88,7 +100,6 @@ macro_rules! on_startup {
                     ),
                     link_section = ".init_array"
                 )]
-
                 // Assume all other unixs support .ctors
                 #[cfg_attr(all(
                     any(unix, all(target_os = "windows", target_env = "gnu")),
@@ -104,6 +115,20 @@ macro_rules! on_startup {
             };
         };
     };
+}
+
+// Note: not part of the public api.
+#[doc(hidden)]
+pub mod _private {
+    pub use core::mem::forget;
+    pub struct PanicOnDrop;
+    impl Drop for PanicOnDrop {
+        #[cold]
+        #[inline(never)]
+        fn drop(&mut self) {
+            panic!("Triggering abort via double panic (static initializer panicked).")
+        }
+    }
 }
 
 #[cfg(test)]
