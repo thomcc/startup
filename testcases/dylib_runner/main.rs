@@ -1,12 +1,7 @@
 fn main() {
     let mut args = std::env::args().skip(1);
-    let path: std::path::PathBuf = args
-        .next()
-        .expect("expected target path")
-        .into();
-    let name = args
-        .next()
-        .expect("expected lib name");
+    let path: std::path::PathBuf = args.next().expect("expected target path").into();
+    let name = args.next().expect("expected lib name");
 
     let sofile = path.join(format!("lib{}.so", name));
     let dll = path.join(format!("{}.dll", name));
@@ -18,7 +13,10 @@ fn main() {
     } else if dylib.exists() {
         dylib
     } else {
-        panic!("couldnt find a dylib like {:?}, {:?}, or {:?}", sofile, dll, dylib);
+        panic!(
+            "couldnt find a dylib like {:?}, {:?}, or {:?}",
+            sofile, dll, dylib
+        );
     };
     let r = maybe_catch_unwind(name == "paniclib", || {
         let lib = libloading::Library::new(&file).unwrap_or_else(|e| {
