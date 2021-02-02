@@ -1,5 +1,9 @@
 fn main() {
-    let path: std::path::PathBuf = std::env::args().skip(1).next().expect("expected arg").into();
+    let path: std::path::PathBuf = std::env::args()
+        .skip(1)
+        .next()
+        .expect("expected arg")
+        .into();
     let sofile = path.join("libdylibtest.so");
     let dll = path.join("dylibtest.dll");
     let dylib = path.join("libdylibtest.dylib");
