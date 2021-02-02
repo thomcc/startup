@@ -115,8 +115,6 @@ mod test {
     on_startup! { VAL.fetch_add(2, Ordering::Relaxed); }
     on_startup! { VAL.fetch_add(4, Ordering::Relaxed); }
 
-    // FIXME this isn't enough testing! should test: binary and
-    // dynamic/static/dlopened libs too
     #[test]
     fn smoke() {
         assert_eq!(VAL.load(Ordering::Relaxed), 1 + 2 + 4);
