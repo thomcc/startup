@@ -9,6 +9,7 @@ on:
 env:
   RUST_BACKTRACE: 1
   RUSTFLAGS: -Dwarnings
+  CI: 1
 
 jobs:
   test:
@@ -33,14 +34,13 @@ jobs:
       # isn't reason to believe this would be very rust-version dependent.
       - run: cargo build --manifest-path=testcases/dylib/Cargo.toml
         if: matrix.rust != '1.37.0'
-      # hack to figure out why windows is busted
-      - run: ls testcases/target
-        shell: bash
-      - run: ls testcases/target/debug
-        shell: bash
-        # if: matrix.os == 'windows-latest'
-      - run: cargo run --manifest-path=testcases/dylib_runner/Cargo.toml -- testcases/target/debug
+      - run: cargo run --manifest-path=testcases/dylib_runner/Cargo.toml -- testcases/target/debug dylibtest
         if: matrix.rust != '1.37.0'
+      - run: cargo build --manifest-path=testcases/paniclib/Cargo.toml
+        if: matrix.rust != '1.37.0'
+      - run: bash scripts/test_panic_afterbuild.sh
+        env: { RUST_BACKTRACE: 0 }
+        if: matrix.rust != '1.37.0' && matrix.os != 'windows-latest'
 
   checks:
     name: Lint and rustfmt
