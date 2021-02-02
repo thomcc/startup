@@ -1,0 +1,2 @@
+[workspace]
+members = ["dylib", "dylib_runner", "smokebin"]

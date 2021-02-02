@@ -1,7 +1,9 @@
 # `startup`: Run Rust code "before main"
 
+[![Build Status](https://github.com/thomcc/startup/workflows/CI/badge.svg)](https://github.com/thomcc/startup/actions)
 [![Docs](https://docs.rs/startup/badge.svg)](https://docs.rs/startup)
 [![Latest Version](https://img.shields.io/crates/v/startup.svg)](https://crates.io/crates/startup)
+![Minimum Rust Version](https://img.shields.io/badge/MSRV%201.37-blue.svg)
 
 Tiny (no-dependency, no proc macro) way to run some code before main (or when your dynamic library is loaded in the case of code loaded via dlopen). This is similar to the GNU C extension `__attribute__((constructor))`, or the behavior of static constructors from C++.
 
