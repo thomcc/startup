@@ -9,5 +9,8 @@ publish = false
 name = "smokebin"
 path = "main.rs"
 
+[features]
+eager_static = ["startup/eager_static"]
+
 [dependencies]
 startup = { path = "../.." }

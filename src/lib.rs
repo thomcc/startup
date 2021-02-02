@@ -25,6 +25,16 @@
 //! }
 //! ```
 
+#[cfg(feature = "eager_static")]
+#[macro_use]
+mod eager_static;
+
+#[cfg(feature = "eager_static")]
+#[doc(hidden)]
+pub mod _private {
+    pub use crate::eager_static::EagerStatic;
+}
+
 /// Run some code automatically before the execution of `main`.
 ///
 /// # Example

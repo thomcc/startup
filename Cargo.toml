@@ -12,6 +12,10 @@ repository = "https://github.com/thomcc/startup"
 keywords = ["constructor", "ctor", "init", "main", "static"]
 categories = ["rust-patterns", "no-std"]
 
+[features]
+eager_static = []
+default = ["eager_static"]
+
 [dependencies]
 
 
