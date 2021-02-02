@@ -8,7 +8,7 @@ fn main() {
         .next()
         .expect("expected lib name");
 
-    let sofile = path.join(format!("lib{}.som", name));
+    let sofile = path.join(format!("lib{}.so", name));
     let dll = path.join(format!("{}.dll", name));
     let dylib = path.join(format!("lib{}.dylib", name));
     let file: std::path::PathBuf = if sofile.exists() {
@@ -18,7 +18,7 @@ fn main() {
     } else if dylib.exists() {
         dylib
     } else {
-        panic!("couldnt find a dylib like {:?}", path);
+        panic!("couldnt find a dylib like {:?}, {:?}, or {:?}", sofile, dll, dylib);
     };
     let r = maybe_catch_unwind(name == "paniclib", || {
         let lib = libloading::Library::new(&file).unwrap_or_else(|e| {
