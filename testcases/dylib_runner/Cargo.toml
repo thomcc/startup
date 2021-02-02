@@ -1,0 +1,13 @@
+[package]
+name = "dylib_runner"
+version = "0.1.0"
+authors = ["Thom Chiovoloni <chiovolonit@gmail.com>"]
+edition = "2018"
+publish = false
+
+[[bin]]
+name = "dylib_runner"
+path = "main.rs"
+
+[dependencies]
+libloading = "0.6"

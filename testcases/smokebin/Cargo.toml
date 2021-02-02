@@ -1,0 +1,13 @@
+[package]
+name = "smokebin"
+version = "0.1.0"
+authors = ["Thom Chiovoloni <chiovolonit@gmail.com>"]
+edition = "2018"
+publish = false
+
+[[bin]]
+name = "smokebin"
+path = "main.rs"
+
+[dependencies]
+startup = { path = "../.." }

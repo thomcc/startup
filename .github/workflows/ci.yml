@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  RUST_BACKTRACE: 1
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  test:
+    name: Test Rust ${{ matrix.rust }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Note:
+        rust: [stable, "1.37.0"]
+        # TODO: test more w/ cross or something
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+      - run: cargo test --verbose
+      - run: cargo run --manifest-path=testcases/smokebin/Cargo.toml
+      - run: cargo clean
+      # Note: libloading doesn't support 1.37.0, so we skip these tests. There
+      # isn't reason to believe this would be very rust-version dependent.
+      - run: cargo build --manifest-path=testcases/dylib/Cargo.toml
+        if: matrix.rust != '1.37.0'
+      # hack to figure out why windows is busted
+      - run: ls testcases/target
+        shell: bash
+      - run: ls testcases/target/debug
+        shell: bash
+        # if: matrix.os == 'windows-latest'
+      - run: cargo run --manifest-path=testcases/dylib_runner/Cargo.toml -- testcases/target/debug
+        if: matrix.rust != '1.37.0'
+
+  checks:
+    name: Lint and rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          components: rustfmt
+      - run: cargo check --all-targets --verbose
+      - run: cargo check --all-targets --verbose --manifest-path=testcases/Cargo.toml
+      - run: cargo fmt --all -- --check
+      - run: cargo fmt --all --manifest-path=testcases/Cargo.toml -- --check
