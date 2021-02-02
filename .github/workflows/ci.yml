@@ -17,6 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Note:
         rust: [stable, "1.37.0"]
         # TODO: test more w/ cross or something
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -28,8 +29,18 @@ jobs:
       - run: cargo test --verbose
       - run: cargo run --manifest-path=testcases/smokebin/Cargo.toml
       - run: cargo clean
+      # Note: libloading doesn't support 1.37.0, so we skip these tests. There
+      # isn't reason to believe this would be very rust-version dependent.
       - run: cargo build --manifest-path=testcases/dylib/Cargo.toml
+        if: matrix.rust != '1.37.0'
+      # hack to figure out why windows is busted
+      - run: ls testcases/target
+        shell: bash
+      - run: ls testcases/target/debug
+        shell: bash
+        # if: matrix.os == 'windows-latest'
       - run: cargo run --manifest-path=testcases/dylib_runner/Cargo.toml -- testcases/target/debug/libdylibtest
+        if: matrix.rust != '1.37.0'
 
   checks:
     name: Lint and rustfmt
