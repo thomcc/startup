@@ -1,5 +1,4 @@
 #![no_std]
-
 //! Lightweight (zero dependency, proc_macro free) way to run code before main.
 //!
 //! This crate is the moral equivalent to the `ctor` crate, although the API is
@@ -120,9 +119,6 @@ mod test {
     // dynamic/static/dlopened libs too
     #[test]
     fn smoke() {
-        assert_eq!(
-            VAL.load(Ordering::Relaxed),
-            1 + 2 + 4,
-        );
+        assert_eq!(VAL.load(Ordering::Relaxed), 1 + 2 + 4);
     }
 }
