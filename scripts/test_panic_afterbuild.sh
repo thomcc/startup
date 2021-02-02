@@ -6,8 +6,7 @@ fi
 
 # run in subshell to avoid getting killed by the signal
 # note: `trap` doesn't help here.
-# shellcheck disable=SC2091
-$(./testcases/target/debug/dylib_runner testcases/target/debug paniclib)
+(./testcases/target/debug/dylib_runner testcases/target/debug paniclib)
 status="$?"
 echo "note: paniclib exited with $status (should be an error)"
 if test "$status" -eq "0"; then
